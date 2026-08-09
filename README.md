@@ -1,6 +1,6 @@
 # JNIC Emulator
 
-![JNIC Emulator architecture](docs/images/architecture.svg)
+![JNIC Emulator logo](docs/images/logo.svg)
 
 [![Rust 1.85+](https://img.shields.io/badge/Rust-1.85%2B-b7410e?logo=rust&logoColor=white)](https://www.rust-lang.org/)
 [![Research use](https://img.shields.io/badge/purpose-security%20research-2563eb)](LICENSE)
@@ -29,6 +29,22 @@ The project is independent and is not affiliated with, endorsed by, or sponsored
 - Produces a deterministic, human-readable report with SHA-256 provenance.
 
 It does **not** start Java, call `DllMain`, call `JNI_OnLoad`, resolve host imports, map the PE as executable memory, or invoke any instruction from the target.
+
+## Version support
+
+Support is based on the native resource layout and loader structure, not only a version string. The following matrix separates versions tested end to end from formats that are merely expected to be similar:
+
+| Product / format | Status | Evidence |
+| --- | --- | --- |
+| JNIC 3.5.1, Windows x86-64 | **Verified** | JavaObfuscatorTest fixture: 50/50 native methods mapped, 0 warnings |
+| JNIC 3.7.0, Windows x86-64 | **Verified** | JavaObfuscatorTest fixture: 50/50 native methods mapped, 0 warnings |
+| Other JNIC 3.x releases using the same loader, raw LZMA2, and PE32+ layout | **Expected, not guaranteed** | Format-driven discovery should apply, but no fixture has been verified yet |
+| Newer or older JNIC layouts | **Unverified** | A format change may require parser or mapper updates |
+| Standalone Windows x86-64 PE32+ payloads | **Metadata supported** | Sections, imports, exports, and function tables are parsed; Java method mapping is unavailable |
+| ARM64 native payloads | **Not supported** | The current instruction engine is x86-64 only |
+| OpenJNIC | **Not supported** | It is a different layout and is rejected safely rather than guessed |
+
+“Verified” means that archive discovery, class parsing, resource decoding, PE validation, native registration mapping, x86-64 decoding, JNI-origin tracing, and report generation all completed successfully. It does not promise exact source-code recovery or compatibility with every configuration of that release.
 
 ## Processing pipeline
 
@@ -175,6 +191,35 @@ cargo run -- self-test
 ```
 
 The test suite covers descriptor validation, modified UTF-8, bounded writers, JNI ABI slots, loader-export decoding, report units, and parser truncation behavior. Real samples are deliberately not distributed in this repository.
+
+### JavaObfuscatorTest validation
+
+End-to-end compatibility was checked against the public [huzpsb/JavaObfuscatorTest](https://github.com/huzpsb/JavaObfuscatorTest) repository at commit [`d3e2539`](https://github.com/huzpsb/JavaObfuscatorTest/commit/d3e2539fb244477ca0972cf88b45b6a35c8c6594). That revision documents both samples as built with JNIC flow obfuscation and string obfuscation enabled.
+
+The fixtures were analyzed with the release build and default safety limits:
+
+```bash
+cargo build --release
+
+target/release/jnic-emulator analyze \
+  ../JavaObfuscatorTest/sample/JNIC-3.5.1.jar \
+  --output /tmp/jnic-3.5.1-analysis.txt
+
+target/release/jnic-emulator analyze \
+  ../JavaObfuscatorTest/sample/JNIC-3.7.0.jar \
+  --output /tmp/jnic-3.7.0-analysis.txt
+```
+
+Results recorded on 2026-08-09:
+
+| Fixture | SHA-256 | Classes parsed | Protected classes | Methods mapped | x86 instructions | JNI sites | Warnings |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| JNIC 3.5.1 | `403814307b00bb5902ec336a3bef158c33e3dd349fed7fdb0cb683f77cd82e19` | 50 | 31 | 50/50 | 17,261 | 804 | 0 |
+| JNIC 3.7.0 | `b26db8ed5c425fa492ed633d16942fd3d751c7a4c928b9d0b8dc9ebf688ab70a` | 50 | 31 | 50/50 | 15,858 | 862 | 0 |
+
+As a negative format test, the repository's `OpenJNIC.jar` fixture was also supplied to the analyzer. It returned a nonzero exit code with `no unambiguous loader class and .dat resource pair was found`, confirming that an unsupported layout fails closed.
+
+The third-party fixtures and generated reports are not redistributed here. The counts above describe this project revision and the linked fixture revision; later changes to either repository may produce different evidence counts.
 
 ## Supported scope
 
