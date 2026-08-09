@@ -1,0 +1,8 @@
+/target/
+*.txt
+*.jar
+*.dll
+*.exe
+*.dat
+.idea/
+.vscode/

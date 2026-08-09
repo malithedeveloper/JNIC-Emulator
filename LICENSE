@@ -1,0 +1,92 @@
+JNIC EMULATOR RESEARCH AND ATTRIBUTION LICENSE 1.0
+
+Copyright (c) 2026 malidev. All rights reserved except as expressly granted below.
+
+1. DEFINITIONS
+
+"Software" means the JNIC Emulator source code, documentation, diagrams, and
+associated files distributed with this license.
+
+"Research Purposes" means lawful security research, defensive analysis,
+education, academic study, interoperability testing, and analysis of software
+that the user owns or is explicitly authorized to inspect.
+
+2. LIMITED LICENSE GRANT
+
+Subject to every condition in this license, malidev grants you a worldwide,
+non-exclusive, non-transferable, revocable, royalty-free license to use, copy,
+study, modify, and redistribute the Software solely for Research Purposes.
+
+3. REQUIRED ATTRIBUTION AND REFERENCE
+
+Every copy or substantial portion of the Software, and every modified or
+derived work, publication, report, product, or tool that incorporates or relies
+on the Software, must:
+
+  a. prominently identify the original work as "JNIC Emulator by malidev";
+  b. provide a visible link to the canonical project at
+     https://github.com/malithedeveloper/JNIC-Emulator;
+  c. preserve this license and all copyright notices; and
+  d. clearly state significant modifications and identify the modifying party.
+
+Attribution may not imply endorsement by malidev.
+
+4. PROHIBITED USES
+
+You may not use the Software, directly or indirectly:
+
+  a. to create, deploy, conceal, improve, or facilitate malware or other
+     harmful code;
+  b. to gain unauthorized access to systems, accounts, data, or software;
+  c. to analyze software without the owner's authorization where authorization
+     is required by law, contract, or policy;
+  d. to evade security controls for malicious, fraudulent, or harmful purposes;
+  e. to violate privacy, intellectual-property rights, applicable law, or the
+     rights of another person; or
+  f. for any purpose outside Research Purposes.
+
+5. REDISTRIBUTION
+
+Source redistributions must include the complete corresponding source for all
+modifications to the Software, this license, and the attribution required by
+Section 3. Binary redistributions must provide an accessible location for that
+corresponding source and license for as long as the binary is distributed.
+
+6. CONTRIBUTIONS
+
+Unless a separate written agreement states otherwise, a contribution submitted
+to this project is licensed to malidev under terms sufficient for malidev to
+include and relicense it as part of the Software. The contributor represents
+that they have the right to submit the contribution.
+
+7. TERMINATION
+
+Your rights under this license terminate automatically upon breach. If the
+breach is curable, rights are reinstated only when the breach is fully cured
+within 14 days after discovery and no prior breach has occurred. Sections 3, 4,
+8, and 9 survive termination.
+
+8. DISCLAIMER OF WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE, TITLE, AND NON-INFRINGEMENT. YOU BEAR ALL RISK ARISING FROM USE OF THE
+SOFTWARE AND FROM ANALYZING THIRD-PARTY INPUT.
+
+9. LIMITATION OF LIABILITY
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, MALIDEV AND CONTRIBUTORS SHALL NOT BE
+LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT, OR
+OTHERWISE, ARISING FROM OR RELATED TO THE SOFTWARE OR ITS USE.
+
+10. NO TRADEMARK LICENSE OR AFFILIATION
+
+This license grants no trademark rights. The Software is an independent
+research project and does not claim affiliation with any third party.
+
+11. SEVERABILITY AND ENTIRE LICENSE
+
+If a provision is unenforceable, it will be limited to the minimum extent
+necessary and the remaining provisions will continue in effect. This document
+is the entire license grant for the Software unless malidev agrees otherwise in
+writing.
