@@ -1,7 +1,5 @@
 # JNIC Emulator
 
-![JNIC Emulator logo](docs/images/logo.svg)
-
 [![Rust 1.85+](https://img.shields.io/badge/Rust-1.85%2B-b7410e?logo=rust&logoColor=white)](https://www.rust-lang.org/)
 [![No unsafe Rust](https://img.shields.io/badge/unsafe-forbidden-16a34a)](src/lib.rs)
 
@@ -129,8 +127,6 @@ jnic-emulator analyze input.jar \
 Do not raise limits for untrusted samples unless the analysis environment has enough memory and CPU capacity.
 
 ## Understanding the report
-
-![Example report](docs/images/report-preview.svg)
 
 The report is split into four evidence layers:
 

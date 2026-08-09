@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="350" viewBox="0 0 1280 350" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="220" viewBox="0 0 1280 220" role="img" aria-labelledby="title desc">
   <title id="title">JNIC Emulator processing workflow</title>
   <desc id="desc">Seven bounded stages take untrusted input to a text report without executing target code.</desc>
   <defs>
@@ -13,24 +13,22 @@
       <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#475569" flood-opacity=".16"/>
     </filter>
   </defs>
-  <rect width="1280" height="350" rx="24" fill="url(#bg)"/>
-  <text x="52" y="60" fill="#0f172a" font-family="Inter,Segoe UI,sans-serif" font-size="27" font-weight="700">From archive to evidence</text>
-  <text x="52" y="88" fill="#64748b" font-family="Inter,Segoe UI,sans-serif" font-size="15">Every transition is validated and bounded.</text>
+  <rect width="1280" height="220" rx="24" fill="url(#bg)"/>
 
-  <g stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#arrow)">
-    <path d="M202 192H224"/><path d="M374 192H396"/><path d="M546 192H568"/>
-    <path d="M718 192H740"/><path d="M890 192H912"/><path d="M1062 192H1084"/>
-  </g>
+  <g transform="translate(0 -82)">
+    <g stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#arrow)">
+      <path d="M202 192H224"/><path d="M374 192H396"/><path d="M546 192H568"/>
+      <path d="M718 192H740"/><path d="M890 192H912"/><path d="M1062 192H1084"/>
+    </g>
 
-  <g filter="url(#shadow)" font-family="Inter,Segoe UI,sans-serif">
-    <g><rect x="52" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="78" cy="154" r="15" fill="#2563eb"/><text x="78" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">1</text><text x="74" y="191" fill="#0f172a" font-size="16" font-weight="700">Fingerprint</text><text x="74" y="216" fill="#64748b" font-size="12">size + SHA-256</text><text x="74" y="234" fill="#64748b" font-size="12">type detection</text></g>
-    <g><rect x="224" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="250" cy="154" r="15" fill="#2563eb"/><text x="250" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">2</text><text x="246" y="191" fill="#0f172a" font-size="16" font-weight="700">Parse JAR</text><text x="246" y="216" fill="#64748b" font-size="12">ZIP safeguards</text><text x="246" y="234" fill="#64748b" font-size="12">class metadata</text></g>
-    <g><rect x="396" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="422" cy="154" r="15" fill="#7c3aed"/><text x="422" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">3</text><text x="418" y="191" fill="#0f172a" font-size="16" font-weight="700">Discover</text><text x="418" y="216" fill="#64748b" font-size="12">loader evidence</text><text x="418" y="234" fill="#64748b" font-size="12">resource pair</text></g>
-    <g><rect x="568" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="594" cy="154" r="15" fill="#7c3aed"/><text x="594" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">4</text><text x="590" y="191" fill="#0f172a" font-size="16" font-weight="700">Decode</text><text x="590" y="216" fill="#64748b" font-size="12">raw LZMA2</text><text x="590" y="234" fill="#64748b" font-size="12">output limit</text></g>
-    <g><rect x="740" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="766" cy="154" r="15" fill="#ea580c"/><text x="766" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">5</text><text x="762" y="191" fill="#0f172a" font-size="16" font-weight="700">Validate PE</text><text x="762" y="216" fill="#64748b" font-size="12">sections + tables</text><text x="762" y="234" fill="#64748b" font-size="12">x86-64 only</text></g>
-    <g><rect x="912" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="938" cy="154" r="15" fill="#ea580c"/><text x="938" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">6</text><text x="934" y="191" fill="#0f172a" font-size="16" font-weight="700">Interpret</text><text x="934" y="216" fill="#64748b" font-size="12">bounded CFG</text><text x="934" y="234" fill="#64748b" font-size="12">JNI origins</text></g>
-    <g><rect x="1084" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="1110" cy="154" r="15" fill="#16a34a"/><text x="1110" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">7</text><text x="1106" y="191" fill="#0f172a" font-size="16" font-weight="700">Report</text><text x="1106" y="216" fill="#64748b" font-size="12">method evidence</text><text x="1106" y="234" fill="#64748b" font-size="12">host calls: 0</text></g>
+    <g filter="url(#shadow)" font-family="Inter,Segoe UI,sans-serif">
+      <g><rect x="52" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="78" cy="154" r="15" fill="#2563eb"/><text x="78" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">1</text><text x="74" y="191" fill="#0f172a" font-size="16" font-weight="700">Fingerprint</text><text x="74" y="216" fill="#64748b" font-size="12">size + SHA-256</text><text x="74" y="234" fill="#64748b" font-size="12">type detection</text></g>
+      <g><rect x="224" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="250" cy="154" r="15" fill="#2563eb"/><text x="250" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">2</text><text x="246" y="191" fill="#0f172a" font-size="16" font-weight="700">Parse JAR</text><text x="246" y="216" fill="#64748b" font-size="12">ZIP safeguards</text><text x="246" y="234" fill="#64748b" font-size="12">class metadata</text></g>
+      <g><rect x="396" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="422" cy="154" r="15" fill="#7c3aed"/><text x="422" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">3</text><text x="418" y="191" fill="#0f172a" font-size="16" font-weight="700">Discover</text><text x="418" y="216" fill="#64748b" font-size="12">loader evidence</text><text x="418" y="234" fill="#64748b" font-size="12">resource pair</text></g>
+      <g><rect x="568" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="594" cy="154" r="15" fill="#7c3aed"/><text x="594" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">4</text><text x="590" y="191" fill="#0f172a" font-size="16" font-weight="700">Decode</text><text x="590" y="216" fill="#64748b" font-size="12">raw LZMA2</text><text x="590" y="234" fill="#64748b" font-size="12">output limit</text></g>
+      <g><rect x="740" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="766" cy="154" r="15" fill="#ea580c"/><text x="766" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">5</text><text x="762" y="191" fill="#0f172a" font-size="16" font-weight="700">Validate PE</text><text x="762" y="216" fill="#64748b" font-size="12">sections + tables</text><text x="762" y="234" fill="#64748b" font-size="12">x86-64 only</text></g>
+      <g><rect x="912" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="938" cy="154" r="15" fill="#ea580c"/><text x="938" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">6</text><text x="934" y="191" fill="#0f172a" font-size="16" font-weight="700">Interpret</text><text x="934" y="216" fill="#64748b" font-size="12">bounded CFG</text><text x="934" y="234" fill="#64748b" font-size="12">JNI origins</text></g>
+      <g><rect x="1084" y="128" width="150" height="128" rx="16" fill="#fff" stroke="#cbd5e1"/><circle cx="1110" cy="154" r="15" fill="#16a34a"/><text x="1110" y="160" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">7</text><text x="1106" y="191" fill="#0f172a" font-size="16" font-weight="700">Report</text><text x="1106" y="216" fill="#64748b" font-size="12">method evidence</text><text x="1106" y="234" fill="#64748b" font-size="12">host calls: 0</text></g>
+    </g>
   </g>
-  <rect x="453" y="295" width="374" height="34" rx="17" fill="#dcfce7" stroke="#86efac"/>
-  <text x="640" y="317" text-anchor="middle" fill="#166534" font-family="Inter,Segoe UI,sans-serif" font-size="14" font-weight="600">Malformed or ambiguous input stops safely</text>
 </svg>
