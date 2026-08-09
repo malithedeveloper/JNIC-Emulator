@@ -84,7 +84,6 @@
       <text x="429" y="25" text-anchor="middle" fill="#bbf7d0" font-size="13" font-weight="650">0 TARGET CALLS</text>
     </g>
 
-    <text x="5" y="372" fill="#64748b" font-family="ui-monospace,SFMono-Regular,monospace" font-size="15">RESEARCH TOOL BY</text>
-    <text x="166" y="372" fill="#fdba74" font-family="ui-monospace,SFMono-Regular,monospace" font-size="15" font-weight="700">malidev</text>
+    <text x="5" y="372" fill="#64748b" font-family="ui-monospace,SFMono-Regular,monospace" font-size="15">STATIC ANALYSIS · SAFE BY DESIGN</text>
   </g>
 </svg>

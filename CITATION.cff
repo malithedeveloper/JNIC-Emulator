@@ -10,6 +10,6 @@ license: "LicenseRef-JNIC-Emulator-Research-1.0"
 version: 1.0.0
 date-released: 2026-08-09
 abstract: >-
-  A safe, source-only Rust research tool for parsing JNIC-protected Java
-  archives and performing bounded static interpretation of embedded Windows
-  x86-64 payloads without host execution.
+  A source-only Rust analyzer for JNIC-protected Java archives that performs
+  bounded static interpretation of embedded Windows x86-64 payloads without
+  host execution.

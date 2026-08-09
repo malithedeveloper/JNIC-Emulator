@@ -1,4 +1,4 @@
-//! Safe, research-oriented analysis primitives for JNIC-protected archives.
+//! Safe analysis primitives for JNIC-protected archives.
 //!
 //! The crate parses input as data. Target native code is never loaded into the
 //! host process and is never invoked.

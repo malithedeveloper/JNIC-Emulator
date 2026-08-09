@@ -4,11 +4,11 @@ version = "1.0.0"
 edition = "2024"
 rust-version = "1.85"
 authors = ["malidev"]
-description = "A safe, research-oriented static emulator for inspecting JNIC-protected Java archives"
+description = "A safe static emulator for inspecting JNIC-protected Java archives"
 readme = "README.md"
 license-file = "LICENSE"
 repository = "https://github.com/malithedeveloper/JNIC-Emulator"
-keywords = ["jnic", "java", "reverse-engineering", "research", "pe"]
+keywords = ["jnic", "java", "reverse-engineering", "static-analysis", "pe"]
 categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]

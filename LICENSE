@@ -7,13 +7,15 @@ Copyright (c) 2026 malidev. All rights reserved except as expressly granted belo
 "Software" means the JNIC Emulator source code, documentation, diagrams, and
 associated files distributed with this license.
 
+"Licensor" means the copyright holder identified above.
+
 "Research Purposes" means lawful security research, defensive analysis,
 education, academic study, interoperability testing, and analysis of software
 that the user owns or is explicitly authorized to inspect.
 
 2. LIMITED LICENSE GRANT
 
-Subject to every condition in this license, malidev grants you a worldwide,
+Subject to every condition in this license, the Licensor grants you a worldwide,
 non-exclusive, non-transferable, revocable, royalty-free license to use, copy,
 study, modify, and redistribute the Software solely for Research Purposes.
 
@@ -23,13 +25,13 @@ Every copy or substantial portion of the Software, and every modified or
 derived work, publication, report, product, or tool that incorporates or relies
 on the Software, must:
 
-  a. prominently identify the original work as "JNIC Emulator by malidev";
+  a. prominently identify the original work as "JNIC Emulator";
   b. provide a visible link to the canonical project at
      https://github.com/malithedeveloper/JNIC-Emulator;
   c. preserve this license and all copyright notices; and
   d. clearly state significant modifications and identify the modifying party.
 
-Attribution may not imply endorsement by malidev.
+Attribution may not imply endorsement by the Licensor.
 
 4. PROHIBITED USES
 
@@ -55,9 +57,9 @@ corresponding source and license for as long as the binary is distributed.
 6. CONTRIBUTIONS
 
 Unless a separate written agreement states otherwise, a contribution submitted
-to this project is licensed to malidev under terms sufficient for malidev to
-include and relicense it as part of the Software. The contributor represents
-that they have the right to submit the contribution.
+to this project is licensed to the Licensor under terms sufficient for the
+Licensor to include and relicense it as part of the Software. The contributor
+represents that they have the right to submit the contribution.
 
 7. TERMINATION
 
@@ -75,18 +77,18 @@ SOFTWARE AND FROM ANALYZING THIRD-PARTY INPUT.
 
 9. LIMITATION OF LIABILITY
 
-TO THE MAXIMUM EXTENT PERMITTED BY LAW, MALIDEV AND CONTRIBUTORS SHALL NOT BE
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE LICENSOR AND CONTRIBUTORS SHALL NOT BE
 LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT, OR
 OTHERWISE, ARISING FROM OR RELATED TO THE SOFTWARE OR ITS USE.
 
 10. NO TRADEMARK LICENSE OR AFFILIATION
 
-This license grants no trademark rights. The Software is an independent
-research project and does not claim affiliation with any third party.
+This license grants no trademark rights. The Software is an independent project
+and does not claim affiliation with any third party.
 
 11. SEVERABILITY AND ENTIRE LICENSE
 
 If a provision is unenforceable, it will be limited to the minimum extent
 necessary and the remaining provisions will continue in effect. This document
-is the entire license grant for the Software unless malidev agrees otherwise in
-writing.
+is the entire license grant for the Software unless the Licensor agrees
+otherwise in writing.

@@ -31,7 +31,7 @@
     <text x="82" y="284" fill="#94a3b8">JNI Call Sites</text><text x="255" y="284" fill="#c4b5fd">: 862</text>
 
     <line x1="82" y1="310" x2="1194" y2="310" stroke="#334155"/>
-    <text x="82" y="342" fill="#60a5fa">CLASS example.research.Sample</text>
+    <text x="82" y="342" fill="#60a5fa">CLASS example.app.Sample</text>
     <text x="82" y="370" fill="#94a3b8">Loader export RVA</text><text x="280" y="370" fill="#e2e8f0">: 0xceb5</text>
     <text x="82" y="398" fill="#94a3b8">Declared methods</text><text x="280" y="398" fill="#e2e8f0">: 1</text>
 

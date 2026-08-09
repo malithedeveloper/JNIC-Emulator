@@ -3,15 +3,12 @@
 ![JNIC Emulator logo](docs/images/logo.svg)
 
 [![Rust 1.85+](https://img.shields.io/badge/Rust-1.85%2B-b7410e?logo=rust&logoColor=white)](https://www.rust-lang.org/)
-[![Research use](https://img.shields.io/badge/purpose-security%20research-2563eb)](LICENSE)
 [![No unsafe Rust](https://img.shields.io/badge/unsafe-forbidden-16a34a)](src/lib.rs)
 
-JNIC Emulator is a source-only Rust research tool for inspecting JNIC-protected Java archives and their embedded Windows x86-64 payloads. It discovers the loader/resource pair, parses Java class metadata, decodes the PE image, maps protected methods, and performs bounded control-flow interpretation without loading or invoking target machine code.
-
-Created and maintained by **malidev**.
+JNIC Emulator is a source-only Rust analyzer for JNIC-protected Java archives and their embedded Windows x86-64 payloads. It discovers the loader/resource pair, parses Java class metadata, decodes the PE image, maps protected methods, and performs bounded control-flow interpretation without loading or invoking target machine code.
 
 > [!IMPORTANT]
-> This project is intended only for lawful security research, education, interoperability, and defensive analysis. Analyze only software you own or are explicitly authorized to inspect. Malicious use is prohibited by the project license.
+> Analyze only software you own or are explicitly authorized to inspect. Malicious or unauthorized use is prohibited by the project license.
 
 The project is independent and is not affiliated with, endorsed by, or sponsored by any third-party product, project, or vendor.
 
@@ -42,7 +39,6 @@ Support is based on the native resource layout and loader structure, not only a 
 | Newer or older JNIC layouts | **Unverified** | A format change may require parser or mapper updates |
 | Standalone Windows x86-64 PE32+ payloads | **Metadata supported** | Sections, imports, exports, and function tables are parsed; Java method mapping is unavailable |
 | ARM64 native payloads | **Not supported** | The current instruction engine is x86-64 only |
-| OpenJNIC | **Not supported** | It is a different layout and is rejected safely rather than guessed |
 
 “Verified” means that archive discovery, class parsing, resource decoding, PE validation, native registration mapping, x86-64 decoding, JNI-origin tracing, and report generation all completed successfully. It does not promise exact source-code recovery or compatibility with every configuration of that release.
 
@@ -110,7 +106,7 @@ During analysis, the terminal explicitly confirms the safety model:
 
 ### Resource limits
 
-Every large allocation or traversal has a defensive bound. Defaults can be changed for an unusually large research sample:
+Every large allocation or traversal has a defensive bound. Defaults can be changed for an unusually large sample:
 
 | Option | Default | Meaning |
 | --- | ---: | --- |
@@ -217,8 +213,6 @@ Results recorded on 2026-08-09:
 | JNIC 3.5.1 | `403814307b00bb5902ec336a3bef158c33e3dd349fed7fdb0cb683f77cd82e19` | 50 | 31 | 50/50 | 17,261 | 804 | 0 |
 | JNIC 3.7.0 | `b26db8ed5c425fa492ed633d16942fd3d751c7a4c928b9d0b8dc9ebf688ab70a` | 50 | 31 | 50/50 | 15,858 | 862 | 0 |
 
-As a negative format test, the repository's `OpenJNIC.jar` fixture was also supplied to the analyzer. It returned a nonzero exit code with `no unambiguous loader class and .dat resource pair was found`, confirming that an unsupported layout fails closed.
-
 The third-party fixtures and generated reports are not redistributed here. The counts above describe this project revision and the linked fixture revision; later changes to either repository may produce different evidence counts.
 
 ## Supported scope
@@ -240,16 +234,16 @@ Known limitations:
 - Self-modifying code, runtime-generated registration, and environment-dependent paths may not be visible statically.
 - Raw DLL input lacks Java class metadata, so method names cannot be mapped.
 
-## Research ethics and license
+## License and responsible use
 
-The [JNIC Emulator Research and Attribution License 1.0](LICENSE) permits lawful research, education, interoperability, and defensive analysis. It requires prominent attribution to **malidev** and a link to this repository in copies, derivatives, publications, or tools that use this work. It prohibits malicious activity and unauthorized analysis or access.
+The [project license](LICENSE) permits lawful analysis, education, and interoperability work. Copies and derived work must reference this repository. Malicious activity and unauthorized access are prohibited.
 
-This is a source-available research license, not an OSI-approved open-source license. Review it before using or redistributing the project.
+This is a source-available license, not an OSI-approved open-source license. Review it before using or redistributing the project.
 
 For academic or technical work, use the metadata in [`CITATION.cff`](CITATION.cff). A concise acknowledgement is:
 
 ```text
-JNIC Emulator by malidev — https://github.com/malithedeveloper/JNIC-Emulator
+JNIC Emulator — https://github.com/malithedeveloper/JNIC-Emulator
 ```
 
 ## Responsible disclosure

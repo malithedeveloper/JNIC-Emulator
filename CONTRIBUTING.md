@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions that improve safe parsing, format coverage, tests, documentation, and defensive research workflows are welcome.
+Contributions that improve safe parsing, format coverage, tests, documentation, and defensive analysis workflows are welcome.
 
 Before submitting a change:
 

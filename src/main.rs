@@ -8,7 +8,6 @@ use jnic_emulator::{AnalysisConfig, analyze_path, render_report};
 #[derive(Debug, Parser)]
 #[command(
     name = "jnic-emulator",
-    author = "malidev",
     version,
     about = "Safely inspect JNIC-protected JARs and x86-64 PE payloads"
 )]
