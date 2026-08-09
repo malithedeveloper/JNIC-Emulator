@@ -1,7 +1,6 @@
 # JNIC Emulator
 
 [![Rust 1.85+](https://img.shields.io/badge/Rust-1.85%2B-b7410e?logo=rust&logoColor=white)](https://www.rust-lang.org/)
-[![No unsafe Rust](https://img.shields.io/badge/unsafe-forbidden-16a34a)](src/lib.rs)
 
 JNIC Emulator is a source-only Rust analyzer for JNIC-protected Java archives and their embedded Windows x86-64 payloads. It discovers the loader/resource pair, parses Java class metadata, decodes the PE image, maps protected methods, and performs bounded control-flow interpretation without loading or invoking target machine code.
 
@@ -171,7 +170,7 @@ src/
 └── lib.rs         public library surface and safety contract
 ```
 
-The crate has `unsafe_code = "forbid"`. Parsing helpers use checked offsets and integer conversions; malformed or ambiguous data returns an error instead of selecting a guessed payload.
+Parsing helpers use checked offsets and integer conversions; malformed or ambiguous data returns an error instead of selecting a guessed payload.
 
 ## Tests and quality checks
 
