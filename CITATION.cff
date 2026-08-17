@@ -7,9 +7,9 @@ authors:
 repository-code: "https://github.com/malithedeveloper/JNIC-Emulator"
 url: "https://github.com/malithedeveloper/JNIC-Emulator"
 license: "LicenseRef-JNIC-Emulator-Research-1.0"
-version: 1.0.0
-date-released: 2026-08-09
+version: 1.1.0
+date-released: 2026-08-17
 abstract: >-
-  A source-only Rust analyzer for JNIC-protected Java archives that performs
-  bounded static interpretation of embedded Windows x86-64 payloads without
-  host execution.
+  A source-only Rust analyzer and emulator for JNIC-protected Java archives
+  that performs bounded static analysis and isolated dynamic execution of
+  embedded Windows x86-64 payloads without host execution.

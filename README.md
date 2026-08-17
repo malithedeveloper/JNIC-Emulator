@@ -2,7 +2,7 @@
 
 [![Rust 1.85+](https://img.shields.io/badge/Rust-1.85%2B-b7410e?logo=rust&logoColor=white)](https://www.rust-lang.org/)
 
-JNIC Emulator is a source-only Rust analyzer for JNIC-protected Java archives and their embedded Windows x86-64 payloads. It discovers the loader/resource pair, parses Java class metadata, decodes the PE image, maps protected methods, and performs bounded control-flow interpretation without loading or invoking target machine code.
+JNIC Emulator is a safe, source-only Rust analyzer and emulator for inspecting JNIC-protected Java archives and their embedded Windows x86-64 payloads. It supports both bounded static control-flow analysis and isolated dynamic execution with direct Java code recovery, without ever loading or executing target code on the host system.
 
 > [!IMPORTANT]
 > Analyze only software you own or are explicitly authorized to inspect. Malicious or unauthorized use is prohibited by the project license.
@@ -18,11 +18,11 @@ The project is independent and is not affiliated with, endorsed by, or sponsored
 - Locates and validates an embedded PE32+ x86-64 image.
 - Parses PE sections, exports, imports, exception-directory function boundaries, and image metadata.
 - Maps loader exports to native Java methods through registration-stub analysis.
-- Decodes x86-64 instructions as inert bytes and explores bounded control-flow states.
-- Tracks `JNIEnv` origins and resolves recognized indirect calls through the public JNI function-table ABI.
-- Produces a deterministic, human-readable report with SHA-256 provenance.
+- **Static mode**: decodes x86-64 instructions as inert data, computes basic blocks, branches, loops, and traces JNI function-table calls.
+- **Dynamic mode**: runs target methods inside isolated Unicorn emulator memory with synthetic JNI/import stubs and keystream seed recovery to recover clean, readable Java source code.
+- Produces deterministic, human-readable text reports and optional Java source files with SHA-256 provenance.
 
-It does **not** start Java, call `DllMain`, call `JNI_OnLoad`, resolve host imports, map the PE as executable memory, or invoke any instruction from the target.
+It does **not** start Java on the host, execute target DLLs natively, call `DllMain`, resolve host OS imports, or execute any target instructions on the host CPU.
 
 ## Version support
 
@@ -30,8 +30,8 @@ Support is based on the native resource layout and loader structure, not only a 
 
 | Product / format | Status | Evidence |
 | --- | --- | --- |
-| JNIC 3.5.1, Windows x86-64 | **Verified** | JavaObfuscatorTest fixture: 50/50 native methods mapped, 0 warnings |
-| JNIC 3.7.0, Windows x86-64 | **Verified** | JavaObfuscatorTest fixture: 50/50 native methods mapped, 0 warnings |
+| JNIC 3.5.1, Windows x86-64 | **Verified (Static + Dynamic)** | JavaObfuscatorTest fixture: 50/50 native methods mapped, isolated dynamic trace and Java recovery verified |
+| JNIC 3.7.0, Windows x86-64 | **Verified (Static + Dynamic)** | JavaObfuscatorTest fixture: 50/50 native methods mapped, isolated dynamic trace and Java recovery verified |
 | Other JNIC 3.x releases using the same loader, raw LZMA2, and PE32+ layout | **Expected, not guaranteed** | Format-driven discovery should apply, but no fixture has been verified yet |
 | Newer or older JNIC layouts | **Unverified** | A format change may require parser or mapper updates |
 | Standalone Windows x86-64 PE32+ payloads | **Metadata supported** | Sections, imports, exports, and function tables are parsed; Java method mapping is unavailable |
@@ -61,10 +61,20 @@ All runtime parsing and decoding dependencies are Rust crates. No copied DLL, pr
 
 ## Build
 
+### Static mode only (default, lightweight)
+
 ```bash
 git clone https://github.com/malithedeveloper/JNIC-Emulator.git
 cd JNIC-Emulator
 cargo build --release
+```
+
+### Static + Dynamic mode (with Unicorn backend)
+
+Requires `libunicorn-dev` (or `unicorn` on Arch/CachyOS/macOS).
+
+```bash
+cargo build --release --features dynamic
 ```
 
 The executable will be at:
@@ -74,10 +84,16 @@ The executable will be at:
 
 ## Usage
 
-Analyze a JNIC-protected archive:
+### Static analysis
 
 ```bash
 jnic-emulator analyze input.jar --output analysis.txt
+```
+
+### Dynamic analysis & Java code recovery
+
+```bash
+jnic-emulator analyze input.jar   --mode dynamic   --output analysis.txt   --java-output recovered.java
 ```
 
 Inspect a raw Windows x86-64 payload:
@@ -110,8 +126,13 @@ Every large allocation or traversal has a defensive bound. Defaults can be chang
 | `--max-input-mib` | 1024 | Largest accepted input file |
 | `--max-entry-mib` | 512 | Largest uncompressed JAR member |
 | `--max-decoded-mib` | 1024 | Largest decoded native resource |
-| `--max-method-instructions` | 250,000 | Decode budget per native method |
-| `--max-path-states` | 25,000 | Control-flow state budget per native method |
+| `--mode` | `static` | Analysis mode: `static` or `dynamic` |
+| `--java-output` | none | Output file path for recovered Java source code |
+| `--max-method-instructions` | 250,000 | Decode budget per native method in static mode |
+| `--max-path-states` | 25,000 | Control-flow state budget per native method in static mode |
+| `--max-dynamic-instructions` | 2,000,000 | Maximum emulated instructions per dynamic path |
+| `--max-dynamic-scenarios` | 16 | Maximum explored dynamic branch scenarios per method |
+| `--dynamic-timeout-ms` | 500 | Emulation timeout per dynamic path in milliseconds |
 
 Example:
 
@@ -157,17 +178,20 @@ These are conservative observations, not reconstructed original source code. Opt
 
 ```text
 src/
-├── main.rs        CLI, limit validation, report writing
-├── analyzer.rs    pipeline orchestration and Java/native mapping
-├── archive.rs     bounded ZIP/JAR and raw LZMA2 handling
-├── classfile.rs   JVM class-file and modified UTF-8 parser
-├── descriptor.rs  Java type/method descriptor parser
-├── pe.rs          PE32+ parser and registration target scanner
-├── emulator.rs    bounded x86 control-flow and JNIEnv-origin tracing
-├── jni.rs         public JNI ABI slot names
-├── report.rs      deterministic evidence report renderer
-├── limits.rs      centralized defensive defaults
-└── lib.rs         public library surface and safety contract
+├── main.rs          CLI, limit validation, report and Java source writing
+├── analyzer.rs      pipeline orchestration and Java/native mapping
+├── archive.rs       bounded ZIP/JAR and raw LZMA2 handling
+├── classfile.rs     JVM class-file and modified UTF-8 parser
+├── descriptor.rs    Java type/method descriptor parser
+├── pe.rs            PE32+ parser and registration target scanner
+├── emulator.rs      bounded static x86 control-flow and JNIEnv-origin tracing
+├── dynamic.rs       isolated x86-64 emulator and Java source reconstruction
+├── dynamic_model.rs execution modes and dynamic analysis data structures
+├── loader_seeds.rs  deterministic ChaCha20 keystream and seed recovery
+├── jni.rs           public JNI ABI slot names
+├── report.rs        deterministic evidence report and Java source renderer
+├── limits.rs        centralized defensive defaults
+└── lib.rs           public library surface and safety contract
 ```
 
 Parsing helpers use checked offsets and integer conversions; malformed or ambiguous data returns an error instead of selecting a guessed payload.

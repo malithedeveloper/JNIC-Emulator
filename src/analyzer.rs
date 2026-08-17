@@ -8,6 +8,7 @@ use sha2::{Digest, Sha256};
 
 use crate::archive::{JarArchive, decompress_raw_lzma2};
 use crate::classfile::{JavaClass, JavaMethod, parse_class};
+use crate::dynamic_model::{AnalysisMode, DynamicConfig, DynamicMethodAnalysis};
 use crate::emulator::{NativeAnalysis, TraceConfig, analyze_native};
 use crate::limits::{DEFAULT_MAX_ENTRY_BYTES, DEFAULT_MAX_INPUT_BYTES};
 use crate::pe::{
@@ -27,6 +28,8 @@ pub struct AnalysisConfig {
     pub max_entry_bytes: u64,
     pub max_decoded_resource_bytes: u64,
     pub trace: TraceConfig,
+    pub mode: AnalysisMode,
+    pub dynamic: DynamicConfig,
 }
 
 impl Default for AnalysisConfig {
@@ -36,6 +39,8 @@ impl Default for AnalysisConfig {
             max_entry_bytes: DEFAULT_MAX_ENTRY_BYTES,
             max_decoded_resource_bytes: DEFAULT_MAX_INPUT_BYTES,
             trace: TraceConfig::default(),
+            mode: AnalysisMode::Static,
+            dynamic: DynamicConfig::default(),
         }
     }
 }
@@ -46,6 +51,7 @@ pub struct MappedMethod {
     pub native_rva: Option<u32>,
     pub function: Option<RuntimeFunction>,
     pub analysis: NativeAnalysis,
+    pub dynamic: DynamicMethodAnalysis,
 }
 
 #[derive(Debug, Clone)]
@@ -70,6 +76,7 @@ pub struct AnalysisModel {
     pub payload_offset: usize,
     pub pe_size: usize,
     pub pe: PeImage,
+    pub mode: AnalysisMode,
     pub classes_parsed: usize,
     pub mappings: Vec<ClassMapping>,
     pub warnings: Vec<String>,
@@ -183,7 +190,25 @@ fn inspect_jar(path: &Path, config: AnalysisConfig) -> Result<AnalysisModel> {
     let pe_size = pe_bytes.len();
     let pe = PeImage::parse(pe_bytes)?;
 
-    let mappings = build_mappings(&classes, &pe, config.trace, &mut warnings)?;
+    #[cfg(feature = "dynamic")]
+    let dynamic_context = (config.mode == AnalysisMode::Dynamic)
+        .then(|| crate::dynamic::DynamicContext::new(&pe, &classes))
+        .transpose()?;
+    #[cfg(not(feature = "dynamic"))]
+    if config.mode == AnalysisMode::Dynamic {
+        bail!("dynamic mode requires building with --features dynamic");
+    }
+
+    let mappings = build_mappings(
+        &classes,
+        &pe,
+        config.trace,
+        config.mode,
+        config.dynamic,
+        #[cfg(feature = "dynamic")]
+        dynamic_context.as_ref(),
+        &mut warnings,
+    )?;
     let mapped_names = mappings
         .iter()
         .map(|mapping| mapping.internal_name.as_str())
@@ -212,6 +237,7 @@ fn inspect_jar(path: &Path, config: AnalysisConfig) -> Result<AnalysisModel> {
         payload_offset,
         pe_size,
         pe,
+        mode: config.mode,
         classes_parsed: classes.len(),
         mappings,
         warnings,
@@ -235,6 +261,7 @@ fn inspect_pe(path: &Path, config: AnalysisConfig) -> Result<AnalysisModel> {
         payload_offset: 0,
         pe_size,
         pe,
+        mode: config.mode,
         classes_parsed: 0,
         mappings: Vec::new(),
         warnings: vec![
@@ -248,6 +275,9 @@ fn build_mappings(
     classes: &[JavaClass],
     pe: &PeImage,
     trace: TraceConfig,
+    mode: AnalysisMode,
+    _dynamic_config: DynamicConfig,
+    #[cfg(feature = "dynamic")] dynamic_context: Option<&crate::dynamic::DynamicContext>,
     warnings: &mut Vec<String>,
 ) -> Result<Vec<ClassMapping>> {
     let class_by_name = classes
@@ -311,11 +341,29 @@ fn build_mappings(
             } else {
                 NativeAnalysis::default()
             };
+            #[allow(clippy::option_if_let_else)]
+            let dynamic = if mode == AnalysisMode::Dynamic {
+                #[cfg(feature = "dynamic")]
+                if let Some(context) = dynamic_context {
+                    if let Some(function) = function {
+                        context.analyze_method(class, method, function, _dynamic_config)
+                    } else {
+                        DynamicMethodAnalysis::unavailable("native function boundary not found")
+                    }
+                } else {
+                    DynamicMethodAnalysis::unavailable("loader state unavailable")
+                }
+                #[cfg(not(feature = "dynamic"))]
+                DynamicMethodAnalysis::unavailable("dynamic backend not compiled")
+            } else {
+                DynamicMethodAnalysis::default()
+            };
             methods.push(MappedMethod {
                 method: method.clone(),
                 native_rva,
                 function,
                 analysis,
+                dynamic,
             });
         }
         if targets.len() != methods.len() {
