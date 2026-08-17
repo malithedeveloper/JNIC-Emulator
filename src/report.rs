@@ -3,6 +3,7 @@ use std::fmt::Write as _;
 
 use crate::analyzer::{AnalysisModel, InputKind};
 use crate::descriptor::dotted;
+use crate::dynamic_model::AnalysisMode;
 
 #[must_use]
 pub fn render_report(model: &AnalysisModel) -> String {
@@ -39,6 +40,18 @@ pub fn render_report(model: &AnalysisModel) -> String {
         .iter()
         .map(|analysis| analysis.jni_calls.len())
         .sum::<usize>();
+    let dynamic_attempted = model
+        .mappings
+        .iter()
+        .flat_map(|mapping| &mapping.methods)
+        .filter(|method| method.dynamic.attempted)
+        .count();
+    let dynamic_completed = model
+        .mappings
+        .iter()
+        .flat_map(|mapping| &mapping.methods)
+        .filter(|method| method.dynamic.completed)
+        .count();
 
     let mut output = String::new();
     writeln!(
@@ -46,7 +59,16 @@ pub fn render_report(model: &AnalysisModel) -> String {
         "========================================================================"
     )
     .unwrap();
-    writeln!(output, "  JNIC CONTROLLED STATIC EMULATION REPORT").unwrap();
+    writeln!(
+        output,
+        "  {}",
+        if model.mode == AnalysisMode::Dynamic {
+            "JNIC ISOLATED DYNAMIC ANALYSIS REPORT"
+        } else {
+            "JNIC CONTROLLED STATIC EMULATION REPORT"
+        }
+    )
+    .unwrap();
     writeln!(
         output,
         "========================================================================"
@@ -54,12 +76,22 @@ pub fn render_report(model: &AnalysisModel) -> String {
     .unwrap();
     writeln!(
         output,
-        "  Safety Mode      : PARSE + BOUNDED SYMBOLIC INTERPRETATION"
+        "  Safety Mode      : {}",
+        if model.mode == AnalysisMode::Dynamic {
+            "ISOLATED X86-64 CPU EMULATION"
+        } else {
+            "PARSE + BOUNDED SYMBOLIC INTERPRETATION"
+        }
     )
     .unwrap();
     writeln!(
         output,
-        "  Host Execution   : TARGET CODE NEVER LOADED OR INVOKED"
+        "  Host Execution   : {}",
+        if model.mode == AnalysisMode::Dynamic {
+            "TARGET CODE EMULATED ONLY, NEVER HOST-CALLED"
+        } else {
+            "TARGET CODE NEVER LOADED OR INVOKED"
+        }
     )
     .unwrap();
     writeln!(
@@ -119,6 +151,13 @@ pub fn render_report(model: &AnalysisModel) -> String {
     writeln!(output, "  Explored States   : {path_states}").unwrap();
     writeln!(output, "  Back-edge Loops   : {loops}").unwrap();
     writeln!(output, "  JNI Call Sites    : {jni_calls}").unwrap();
+    if model.mode == AnalysisMode::Dynamic {
+        writeln!(
+            output,
+            "  Dynamic Traces    : {dynamic_completed}/{dynamic_attempted} completed"
+        )
+        .unwrap();
+    }
     writeln!(
         output,
         "========================================================================\n"
@@ -213,6 +252,33 @@ pub fn render_report(model: &AnalysisModel) -> String {
                 }
             )
             .unwrap();
+            if method.dynamic.attempted {
+                writeln!(
+                    output,
+                    "      Dynamic trace    : {} scenarios, {} instructions, {}",
+                    method.dynamic.scenarios,
+                    method.dynamic.instructions,
+                    if method.dynamic.completed {
+                        "returned".to_owned()
+                    } else {
+                        method.dynamic.stop_reason.clone()
+                    }
+                )
+                .unwrap();
+                writeln!(output, "      Recovered Java:").unwrap();
+                for event in method.dynamic.jni_events.iter().take(20) {
+                    writeln!(output, "      event: {event}").unwrap();
+                }
+                let declaration = method
+                    .method
+                    .declaration()
+                    .unwrap_or_else(|_| method.method.name.clone());
+                writeln!(output, "      {declaration} {{").unwrap();
+                for statement in &method.dynamic.java_body {
+                    writeln!(output, "          {statement}").unwrap();
+                }
+                writeln!(output, "      }}").unwrap();
+            }
             writeln!(
                 output,
                 "      Calls            : {} direct, {} indirect",
@@ -276,6 +342,39 @@ pub fn render_report(model: &AnalysisModel) -> String {
         for warning in &model.warnings {
             writeln!(output, "  - {warning}").unwrap();
         }
+    }
+    output
+}
+
+#[must_use]
+pub fn render_java_source(model: &AnalysisModel) -> String {
+    let mut output = String::new();
+    for mapping in &model.mappings {
+        if let Some((package, _)) = mapping.internal_name.rsplit_once('/') {
+            let _ = writeln!(output, "package {};\n", package.replace('/', "."));
+        }
+        let class_name = mapping
+            .internal_name
+            .rsplit('/')
+            .next()
+            .unwrap_or(mapping.internal_name.as_str())
+            .to_owned();
+        let _ = writeln!(output, "public class {class_name} {{");
+        for method in &mapping.methods {
+            if !method.dynamic.attempted {
+                continue;
+            }
+            let declaration = method
+                .method
+                .declaration()
+                .unwrap_or_else(|_| method.method.name.clone());
+            let _ = writeln!(output, "    {declaration} {{");
+            for statement in &method.dynamic.java_body {
+                let _ = writeln!(output, "        {statement}");
+            }
+            let _ = writeln!(output, "    }}\n");
+        }
+        let _ = writeln!(output, "}}\n");
     }
     output
 }
