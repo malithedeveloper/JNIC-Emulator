@@ -1137,7 +1137,9 @@ impl<'a> TraceState<'a> {
         if let Some(text) = self.handle_text(value) {
             return text;
         }
-        if value <= i32::MAX as u64 {
+        if value <= u32::MAX as u64 {
+            format!("{}", (value as u32) as i32)
+        } else if value <= i64::MAX as u64 {
             format!("{}", value as i64)
         } else {
             format!("{value}")
@@ -1559,7 +1561,9 @@ fn quote_java(value: &str) -> String {
 }
 
 fn render_u64(value: u64) -> String {
-    if value <= i64::MAX as u64 {
+    if value <= u32::MAX as u64 {
+        format!("{}", (value as u32) as i32)
+    } else if value <= i64::MAX as u64 {
         format!("{}", value as i64)
     } else {
         format!("{value}")
